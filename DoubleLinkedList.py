@@ -4,6 +4,9 @@ Date: 14/10/22
 Language: Python 3.0
 '''
 
+
+import math
+
 class DoubleLinkedList: 
 
     #* Clase Nodo
@@ -22,64 +25,75 @@ class DoubleLinkedList:
 
     #*Metodo insertar al principio de la lista
     def push_head_node(self, value):
+        aux = self.scroll_list(value)
+        if(aux == False):
         #*Crear nuevo Nodo
-        new_node = self.Node(value)
+            new_node = self.Node(value)
 
-        #*Condicional para saber si la lista esta vacia
-        if self.length == 0:
-            self.head = new_node
-            self.tail = new_node 
-        else:
-            #*Si la lista no está vacia se agrega el nodo al principio
-            new_node.next = self.head
-            self.head.previous = new_node
-            self.head = new_node
+            #*Condicional para saber si la lista esta vacia
+            if self.length == 0:
+                self.head = new_node
+                self.tail = new_node 
+            else:
+                #*Si la lista no está vacia se agrega el nodo al principio
+                new_node.next = self.head
+                self.head.previous = new_node
+                self.head = new_node
 
-        self.length+=1
-        
+            self.length+=1
+        elif(aux == True):
+            print('EL valor ya se encuentra en la lista')
+
     #*Metodo insertar al final de la lista
     def push_tail_node(self, value):
+        aux = self.scroll_list(value)
+        if(aux == False):
         #*Crear nuevo Nodo
-        new_node = self.Node(value)
+            new_node = self.Node(value)
 
-        #*Condicional para saber si la lista esta vacia para agregar el nodo nuevo
-        if self.length == 0:
-            self.head = new_node
-            self.tail = new_node 
-        else:
-            #*Si la lista no está vacia se agrega el nodo al final
-            new_node.previous = self.tail
-            self.tail.next = new_node
-            self.tail = new_node
+            #*Condicional para saber si la lista esta vacia para agregar el nodo nuevo
+            if self.length == 0:
+                self.head = new_node
+                self.tail = new_node 
+            else:
+                #*Si la lista no está vacia se agrega el nodo al final
+                new_node.previous = self.tail
+                self.tail.next = new_node
+                self.tail = new_node
 
-        self.length+=1
-        
+            self.length+=1
+        elif(aux == True):
+            print('El valor ya se encuentra en la lista')
+
     #*Metodo para insertar un nodo en una posicion especifica
     def insert_node(self, index, value):
-        #*Crear nuevo Nodo
-        new_node = self.Node(value)
-        
-        #*Condicional para comparar el indice con la longitud de la lista
-        if index == 0:
-            #*Se agrega a la cabeza de la lista usando la funcion push_head_node
-            self.push_head_node(value)
-        elif index == self.length:
-            #*Se agrega al final de la lista usando la funcion push_tail_node
-            self.push_tail_node(value)
-        elif index > 0 and index < self.length:
-            #*Si no, se agrega en una posicion especifica
-            current_node = self.head
-            for i in range(index-1):
-                current_node = current_node.next
-            new_node.next = current_node.next
-            new_node.previous = current_node
-            current_node.next.previous = new_node
-            current_node.next = new_node
-            self.length+=1
-        else:
-            #*Si el indice es mayor o  menor a la longitud de la lista, se imprime un mensaje de error
-            print('index out of range')
+        aux = self.scroll_list(value)
+        if(aux == False):
+            #*Crear nuevo Nodo
+            new_node = self.Node(value)
             
+            #*Condicional para comparar el indice con la longitud de la lista
+            if index == 0:
+                #*Se agrega a la cabeza de la lista usando la funcion push_head_node
+                self.push_head_node(value)
+            elif index == self.length:
+                #*Se agrega al final de la lista usando la funcion push_tail_node
+                self.push_tail_node(value)
+            elif index > 0 and index < self.length:
+                #*Si no, se agrega en una posicion especifica
+                current_node = self.head
+                for i in range(index-1):
+                    current_node = current_node.next
+                new_node.next = current_node.next
+                new_node.previous = current_node
+                current_node.next.previous = new_node
+                current_node.next = new_node
+                self.length+=1
+            else:
+                #*Si el indice es mayor o  menor a la longitud de la lista, se imprime un mensaje de error
+                print('index out of range')
+        elif aux == True:
+            print('El valor ya se encuentra en la lista')
     
 
     #*Metodo para mostrar la lista
@@ -165,3 +179,39 @@ class DoubleLinkedList:
                 current_node2 = current_node2.previous
 
             self.head = current_node1
+
+
+    def new_validation(self, index):
+        if index < 1 or index > self.length:
+            print("Posicion invalida")
+        elif(index == 1):
+            self.head = pow(self.head.value,2)
+        elif index == self.length:
+            self.tail = pow(self.tail.value,2)
+        else:
+            current_node = self.head
+            node_counter = 1
+            while(node_counter != index):
+                current_node = current_node.next
+                node_counter += 1
+            current_node = pow(current_node.value,2)
+    
+    def scroll_list(self, value):
+        current_node = self.head
+        node_counter = 1
+        aux = False
+        while(node_counter != self.length and aux != True ):
+            if current_node.value == value:
+                aux = True
+            current_node = current_node.next
+            node_counter += 1
+        return aux
+
+    def new_validation2(self):
+        self.reverse_nodes()
+        current_node = self.head
+        node_counter = 1
+        while node_counter != self.length:
+            current_node = math.sqrt(current_node.value)
+            current_node = current_node.next
+            node_counter += 1

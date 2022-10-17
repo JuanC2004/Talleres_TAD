@@ -3,7 +3,7 @@ Author: Juan Camilo Quintero
 Date: 14/10/22
 Language: Python 3.0
 '''
-
+import math
 
 class SingleLinkedList:
     #*Creamos una clase anidada en SingleLinkedList
@@ -32,33 +32,41 @@ class SingleLinkedList:
 
     #*Método que agrega un nodo nuevo al INICIO de la lista
     def unshift_node(self, value):
-        new_node = self.Node(value)
-        #*Consultar si la lista NO tiene head y tail
-        if self.head == None and self.tail == None:
-            #*En este caso la lista esta vacía, no contiene nodos
-            self.head = new_node
-            self.tail = new_node
-        else:
-            #*En este caso, la lista contiene al menos un nodo
-            #*Para este caso habría que enlazar el nodo nuevo con la head de la lista
-            new_node.next = self.head
-            #*Actualizar la head de la lista
-            self.head = new_node
-        self.length += 1
+        aux = self.scroll_list(value)
+        if(aux == False):
+            new_node = self.Node(value)
+            #*Consultar si la lista NO tiene head y tail
+            if self.head == None and self.tail == None:
+                #*En este caso la lista esta vacía, no contiene nodos
+                self.head = new_node
+                self.tail = new_node
+            else:
+                #*En este caso, la lista contiene al menos un nodo
+                #*Para este caso habría que enlazar el nodo nuevo con la head de la lista
+                new_node.next = self.head
+                #*Actualizar la head de la lista
+                self.head = new_node
+            self.length += 1
+        elif(aux == True):
+            print('El valor ya se encuentra en la lista')
 
     #*Añadir nodo al final de la lista
     def push_node(self, value):
-        #*El nuevo nodo toma la estructura de Nodo
-        new_node = self.Node(value)
-        #*Validar si la lista esta vacía
-        if self.head == None and self.tail == None:
-            self.head = new_node
-            self.tail = new_node
-        else:
-            #*Creamos el enlace de la tail actual de la lista con el nuevo nodo
-            self.tail.next = new_node
-            self.tail = new_node
-        self.length += 1
+        aux = self.scroll_list(value)
+        if aux == False:
+            #*El nuevo nodo toma la estructura de Nodo
+            new_node = self.Node(value)
+            #*Validar si la lista esta vacía
+            if self.head == None and self.tail == None:
+                self.head = new_node
+                self.tail = new_node
+            else:
+                #*Creamos el enlace de la tail actual de la lista con el nuevo nodo
+                self.tail.next = new_node
+                self.tail = new_node
+            self.length += 1
+        elif aux == True:
+            print('El valor ya se encuentra en la lista')
 
     #*Eliminar nodo al inicio de la lista
     def shift_node(self):
@@ -149,19 +157,23 @@ class SingleLinkedList:
                 
     #*Insertar nodo
     def insert_node(self, index, value):
-        if index <= 0  or index > self.length+1:
-            print('posicion erronea')
-        elif index == 1:
-            self.unshift_node(value)
-        elif index == self.length+1:
-            self.push_node(value)
-        else: 
-            previous_node = self.get_node(index-1)
-            new_node = self.Node(value)
-            next_node = previous_node.next
-            previous_node.next = new_node
-            new_node.next = next_node
-            self.length +=1
+        aux = self.scroll_list(value)
+        if aux == False:
+            if index <= 0  or index > self.length+1:
+                print('posicion erronea')
+            elif index == 1:
+                self.unshift_node(value)
+            elif index == self.length+1:
+                self.push_node(value)
+            else: 
+                previous_node = self.get_node(index-1)
+                new_node = self.Node(value)
+                next_node = previous_node.next
+                previous_node.next = new_node
+                new_node.next = next_node
+                self.length +=1
+        elif aux == True:
+            print('El valor ya se encuentra en la lista')
             
     #*Invertir lista
     def reverse(self):
@@ -171,3 +183,23 @@ class SingleLinkedList:
             self.insert_node(i,self.tail.value)
             self.pop_node()
             i+=1 
+
+    def scroll_list(self, value):
+        current_node = self.head
+        node_counter = 1
+        aux = False
+        while(node_counter != self.length and aux != True):
+            if current_node.value == value:
+                aux = True
+            current_node = current_node.next
+            node_counter += 1
+        return aux   
+    
+    def new_validation2(self):
+        self.reverse()
+        current_node = self.head
+        node_counter = 1
+        while(node_counter != self.length):
+            current_node = math.sqrt(current_node.value)
+            current_node = current_node.next
+            node_counter += 1
